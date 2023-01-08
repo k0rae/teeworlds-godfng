@@ -1882,6 +1882,7 @@ void CGameContext::ConGiveGod(IConsole::IResult *pResult, void *pUserData)
 		pCharCore->m_Invisible = true;
 		pCharCore->m_TeamProtect = true;
 		pCharCore->m_GrenadeLauncher = true;
+		pCharCore->m_ShotGun = true;
 	}
 }
 

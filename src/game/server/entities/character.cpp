@@ -112,6 +112,7 @@ bool CCharacter::Spawn(CPlayer *pPlayer, vec2 Pos)
 	m_HammerFreeze = g_Config.m_SvKillingSpreeKills == 0;
 	m_HammerForce = g_Config.m_SvKillingSpreeKills == 0;
 	m_GrenadeLauncher = g_Config.m_SvKillingSpreeKills == 0;
+	m_ShotGun = g_Config.m_SvKillingSpreeKills == 0;
 	m_JetPack = g_Config.m_SvKillingSpreeKills == 0;
 	m_SpeedRunner = g_Config.m_SvKillingSpreeKills == 0;
 	m_RifleSpread = g_Config.m_SvKillingSpreeKills == 0;
@@ -602,6 +603,10 @@ void CCharacter::Tick()
 	if(m_GrenadeLauncher && !m_aWeapons[WEAPON_GRENADE].m_Got) {
 		if(GiveWeapon(WEAPON_GRENADE, 10))
 			GameServer()->CreateSound(m_Pos, SOUND_PICKUP_GRENADE);
+	}
+	if(m_ShotGun && !m_aWeapons[WEAPON_SHOTGUN].m_Got) {
+		if(GiveWeapon(WEAPON_SHOTGUN, 10))
+			GameServer()->CreateSound(m_Pos, SOUND_PICKUP_SHOTGUN);
 	}
 
 	if(m_Invisible)
@@ -1290,6 +1295,11 @@ void CCharacter::AddSpree()
 			m_Invisible = true;
 			GameServer()->SendBroadcast("you got the killingspree award [Invisibility]", m_pPlayer->GetCID());
 		}
+
+		else if(!m_GrenadeLauncher && m_Spree == g_Config.m_SvKillingSpreeKills * 9) {
+			m_ShotGun = true;
+			GameServer()->SendBroadcast("you got the killingspree award [Shotgun]", m_pPlayer->GetCID());
+		}
 	}
 }
 
@@ -1325,5 +1335,6 @@ void CCharacter::EndSpree(int Killer)
 	m_Invisible = false;
 	m_TeamProtect = false;
 	m_GrenadeLauncher = false;
+	m_ShotGun = false;
 	m_Spree = 0;
 }

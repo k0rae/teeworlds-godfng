@@ -94,6 +94,7 @@ public:
 	bool m_RifleSpread;
 	bool m_Invisible;
 	bool m_TeamProtect;
+	bool m_ShotGun;
 
 	// spree settings
 	bool m_Visible;

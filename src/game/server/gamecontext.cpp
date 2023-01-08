@@ -1474,7 +1474,6 @@ void CGameContext::CmdGod(CGameContext* pContext, int pClientID, const char** pA
 			"║ Jetpack: %s\n"
 			"║ MaxSpeed: %s\n"
 			"║ Laser2x: %s\n"
-			"║ Fat: %s\n"
 			"║ TeamProtection: %s\n"
 			"║ Invisibility: %s\n"
 			"║\n"
@@ -1485,7 +1484,6 @@ void CGameContext::CmdGod(CGameContext* pContext, int pClientID, const char** pA
 			c->m_JetPack ? "yes": "no",
 			c->m_SpeedRunner ? "yes": "no",
 			c->m_RifleSpread ? "yes": "no",
-			c->Core()->m_Fat ? "yes": "no",
 			c->m_TeamProtect ? "yes": "no",
 			c->m_Invisible ? "yes": "no"
 		);
@@ -1881,7 +1879,6 @@ void CGameContext::ConGiveGod(IConsole::IResult *pResult, void *pUserData)
 		pCharCore->m_JetPack = true;
 		pCharCore->m_SpeedRunner = true;
 		pCharCore->m_RifleSpread = true;
-		pCharCore->Core()->m_Fat = true;
 		pCharCore->m_Invisible = true;
 		pCharCore->m_TeamProtect = true;
 		pCharCore->m_GrenadeLauncher = true;

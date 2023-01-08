@@ -115,7 +115,6 @@ bool CCharacter::Spawn(CPlayer *pPlayer, vec2 Pos)
 	m_JetPack = g_Config.m_SvKillingSpreeKills == 0;
 	m_SpeedRunner = g_Config.m_SvKillingSpreeKills == 0;
 	m_RifleSpread = g_Config.m_SvKillingSpreeKills == 0;
-	m_Core.m_Fat = g_Config.m_SvKillingSpreeKills == 0;
 	m_Invisible = g_Config.m_SvKillingSpreeKills == 0;
 	m_TeamProtect = g_Config.m_SvKillingSpreeKills == 0;
 
@@ -504,8 +503,7 @@ void CCharacter::Unfreeze(int pPlayerID) {
 		
 	if(g_Config.m_SvSmoothFreezeMode)
 		GameServer()->SendTuningParams(m_pPlayer->GetCID());
-	
-	m_Core.m_FatByTeam = false;
+
 }
 
 void CCharacter::SetEmote(int Emote, int Tick)
@@ -673,16 +671,6 @@ void CCharacter::Tick()
         else if(m_Input.m_Direction == -1)
             m_Core.m_Vel.x = SaturatedAdd(-MaxSpeed, MaxSpeed, m_Core.m_Vel.x, -Accel);
     }
-	
-	if(m_Core.m_FatByTeam && m_Core.m_Freeze.m_ActivationTick > 0)
-	{
-		const float MaxSpeed = IsGrounded() ? GameServer()->m_World.m_Core.m_Tuning.m_GroundControlSpeed * 2 : GameServer()->m_World.m_Core.m_Tuning.m_AirControlSpeed * 4;
-        const float Accel = IsGrounded() ? GameServer()->m_World.m_Core.m_Tuning.m_GroundControlAccel : GameServer()->m_World.m_Core.m_Tuning.m_AirControlAccel;
-        if(m_Input.m_Direction == 1)
-            m_Core.m_Vel.x = SaturatedAdd(-MaxSpeed, MaxSpeed, m_Core.m_Vel.x, Accel);
-        else if(m_Input.m_Direction == -1)
-            m_Core.m_Vel.x = SaturatedAdd(-MaxSpeed, MaxSpeed, m_Core.m_Vel.x, -Accel);
-	}
 
 	// handle death-tiles and leaving gamelayer
 	if(GameServer()->Collision()->GetCollisionAt(m_Pos.x+m_ProximityRadius/3.f, m_Pos.y-m_ProximityRadius/3.f)&CCollision::COLFLAG_DEATH ||
@@ -1293,17 +1281,12 @@ void CCharacter::AddSpree()
 			GameServer()->SendBroadcast("you got the killingspree award [Laser2x]", m_pPlayer->GetCID());
 		}
 
-		else if(!m_Core.m_Fat && m_Spree == g_Config.m_SvKillingSpreeKills * 7) {
-			m_Core.m_Fat = true;
-			GameServer()->SendBroadcast("you got the killingspree award [Fat]", m_pPlayer->GetCID());
-		}
-
-		else if(!m_TeamProtect && m_Spree == g_Config.m_SvKillingSpreeKills * 8) {
+		else if(!m_TeamProtect && m_Spree == g_Config.m_SvKillingSpreeKills * 7) {
 			m_TeamProtect = true;
 			GameServer()->SendBroadcast("you got the last killingspree award [TeamProtection]", m_pPlayer->GetCID());
 		}
 
-		else if(!m_Invisible && m_Spree == g_Config.m_SvKillingSpreeKills * 9) {
+		else if(!m_Invisible && m_Spree == g_Config.m_SvKillingSpreeKills * 8) {
 			m_Invisible = true;
 			GameServer()->SendBroadcast("you got the killingspree award [Invisibility]", m_pPlayer->GetCID());
 		}
@@ -1339,7 +1322,6 @@ void CCharacter::EndSpree(int Killer)
 	m_JetPack = false;
 	m_SpeedRunner = false;
 	m_RifleSpread = false;
-	m_Core.m_Fat = false;
 	m_Invisible = false;
 	m_TeamProtect = false;
 	m_GrenadeLauncher = false;

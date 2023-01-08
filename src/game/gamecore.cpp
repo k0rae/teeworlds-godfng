@@ -60,8 +60,6 @@ void CCharacterCore::Init(CWorldCore *pWorld, CCollision *pCollision)
 	m_pWorld = pWorld;
 	m_pCollision = pCollision;
 	m_Freeze.m_ActivationTick = 0;
-	m_Fat = false;
-	m_FatByTeam = false;
 }
 
 void CCharacterCore::Reset()
@@ -76,8 +74,6 @@ void CCharacterCore::Reset()
 	m_Jumped = 0;
 	m_TriggeredEvents = 0;
 	m_Freeze.m_ActivationTick = 0;
-	m_Fat = false;
-	m_FatByTeam = false;
 	
 	mem_zero(&m_CoreStats, sizeof(m_CoreStats));
 }
@@ -361,11 +357,6 @@ void CCharacterCore::TickDeferred()
 				{
 					float Accel = m_pWorld->m_Tuning.m_HookDragAccel * (Distance/m_pWorld->m_Tuning.m_HookLength);
 					float DragSpeed = m_pWorld->m_Tuning.m_HookDragSpeed;
-
-					if(pCharCore->m_Freeze.m_ActivationTick > 0 && (pCharCore->m_Fat || pCharCore->m_FatByTeam)) {
-						Accel /= 10;
-						DragSpeed /= 10;
-					}
 
 					// add force to the hooked player
 					pCharCore->m_Vel.x = SaturatedAdd(-DragSpeed, DragSpeed, pCharCore->m_Vel.x, Accel*Dir.x*1.5f);
